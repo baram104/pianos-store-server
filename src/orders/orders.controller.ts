@@ -5,7 +5,9 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  ValidationPipe,
 } from '@nestjs/common';
+import { OrderDto } from './order-dto';
 
 @Controller('orders')
 export class OrdersController {
@@ -16,8 +18,7 @@ export class OrdersController {
   }
 
   @Post()
-  placeOrder(@Body() order: any) {
-    //guard
+  placeOrder(@Body(new ValidationPipe()) order: OrderDto) {
     //validate data through MW
     //create order
   }
