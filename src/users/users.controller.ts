@@ -5,6 +5,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Session,
 } from '@nestjs/common';
 
 @Controller('users')
@@ -15,7 +16,9 @@ export class UsersController {
   }
 
   @Post('login')
-  login(@Body() userDetails: any) {
+  login(@Body() userDetails: any, @Session() session: Record<string, any>) {
+    console.log(userDetails);
+    session.user = userDetails;
     //validate user details
     //create session
     //redirect to home page
