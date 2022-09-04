@@ -7,30 +7,32 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  ValidationPipe,
 } from '@nestjs/common';
+import { AddProductDto } from './add-product-dto';
 
 @Controller('cart')
 export class CartController {
   //guard
-  @Get(':id')
-  getCartById(@Param('id', ParseIntPipe) id: number) {
+  @Get()
+  getCartById() {
     //get Cart by id
   }
 
   @Post()
-  createCart(@Body() cart: any) {
+  addProduct(@Body(new ValidationPipe()) productData: AddProductDto) {
     //create MW for validating the data
     //add cart
   }
 
-  @Put(':id')
-  updateCart(@Param('id', ParseIntPipe) id: number) {
+  @Put()
+  updateCart(@Body('quantity', ParseIntPipe) quantity: number) {
     //create MW for validating the data
     //update cart
   }
 
-  @Delete(':id')
-  deleteCart(@Param('id', ParseIntPipe) id: number) {
+  @Delete(':prodId')
+  deleteCart(@Param('prodId', ParseIntPipe) prodId: number) {
     //delete cart
   }
 }

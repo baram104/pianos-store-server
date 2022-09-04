@@ -5,28 +5,38 @@ import {
   Param,
   ParseIntPipe,
   Put,
+  Post,
+  Body,
+  ParseBoolPipe,
+  ValidationPipe,
 } from '@nestjs/common';
 
 @Controller('favorite-products')
 export class FavoriteProductsController {
-  @Delete(':userId/:prodId')
-  deleteProductFromFavProducts(
-    @Param('userId', ParseIntPipe) userId: number,
-    @Param('prodId', ParseIntPipe) prodId: number,
-  ) {
+  @Delete(':prodId')
+  deleteProductFromFavProducts(@Param('prodId', ParseIntPipe) prodId: number) {
     //guard
     //remove this product from this wishlist
   }
 
-  @Get(':userId')
-  getUserFavProducts(@Param('userId', ParseIntPipe) userId: number) {
+  @Get()
+  getUserFavProducts() {
     //guard
     //get wish list of a user
   }
 
-  @Put(':userId')
-  updateUserFavProducts(@Param('userId', ParseIntPipe) userId: number) {
+  @Put(':prodId')
+  updateUserFavProducts(
+    @Param('prodId', ParseIntPipe) prodId: number,
+    @Body('notifyWhenInStock', ParseBoolPipe) notifyWhenInStock: boolean,
+  ) {
     //guard
     //update this specific user's wish list
+  }
+
+  @Post()
+  addFavoriteProduct(@Body('prodId', ParseIntPipe) prodId: number) {
+    //guard
+    //add an item to the wishlist
   }
 }
