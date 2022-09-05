@@ -1,22 +1,18 @@
-import {
-  Controller,
-  DefaultValuePipe,
-  Get,
-  Param,
-  ParseIntPipe,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 
 @Controller('products')
 export class ProductsController {
   @Get()
-  getAll(@Query('search-term') products: any) {
+  getAll(@Query('search-term') searchTerm: string) {
     //create a MW for transforming the data as needed
     //get all products/or by a search term
   }
 
   @Get()
-  getBySort(@Query('sort') products: any) {
+  getBySort(
+    @Query('sort')
+    sortCondition: 'low-to-high' | 'high-to-low' | 'popular' | 'rated',
+  ) {
     //create a MW for getting the right data by the sort query
     //get products by sort condition
   }
