@@ -6,15 +6,18 @@ import {
   ParseIntPipe,
   Post,
   Session,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
+import { AuthGuard } from '../guards/auth.guard';
 import { LoginDetailsDto } from './login-details-dto';
 import { RegisterationDetailsDto } from './registeration-details-dto';
 
 @Controller('users')
 export class UsersController {
-  @Get(':id')
-  getUser(@Param('id', ParseIntPipe) id: number) {
+  @Get('profile')
+  @UseGuards(AuthGuard)
+  getUser() {
     //get user details
   }
 

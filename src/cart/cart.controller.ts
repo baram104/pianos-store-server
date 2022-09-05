@@ -7,13 +7,15 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { AddProductDto } from './add-product-dto';
+import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('cart')
+@UseGuards(AuthGuard)
 export class CartController {
-  //guard
   @Get()
   getCartById() {
     //get Cart by id

@@ -5,15 +5,17 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
+import { AuthGuard } from '../guards/auth.guard';
 import { OrderDto } from './order-dto';
 
 @Controller('orders')
+@UseGuards(AuthGuard)
 export class OrdersController {
   @Get(':id')
   getOrder(@Param('id', ParseIntPipe) id: number) {
-    //guard
     //get order by id
   }
 
