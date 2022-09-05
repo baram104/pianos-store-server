@@ -27,8 +27,11 @@ export class CartController {
     //add cart
   }
 
-  @Put()
-  updateCart(@Body('quantity', ParseIntPipe) quantity: number) {
+  @Put(':prodId')
+  updateCart(
+    @Body('quantity', ParseIntPipe) quantity: number,
+    @Param('prodId', ParseIntPipe) prodId: number,
+  ) {
     //create MW for validating the data
     //update cart
   }
