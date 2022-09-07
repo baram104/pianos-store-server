@@ -8,9 +8,28 @@ import { CartModule } from './cart/cart.module';
 import { OrdersModule } from './orders/orders.module';
 import { CategoriesModule } from './categories/categories.module';
 import { RatingModule } from './rating/rating.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [UsersModule, ProductsModule, FavoriteProductsModule, CartModule, OrdersModule, CategoriesModule, RatingModule],
+  imports: [
+    UsersModule,
+    ProductsModule,
+    FavoriteProductsModule,
+    CartModule,
+    OrdersModule,
+    CategoriesModule,
+    RatingModule,
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: 'BarDatabase104',
+      database: 'pianos_store',
+      entities: ['dist/**/*.entity{.ts,.js}'],
+      synchronize: true,
+    }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
