@@ -1,23 +1,14 @@
-import {
-  IsAlpha,
-  IsAlphanumeric,
-  IsEmail,
-  IsNumber,
-  IsNumberString,
-  IsOptional,
-  Max,
-  MaxLength,
-  Min,
-} from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Orders } from '../../orders/entities/orders.entity';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { FavoriteProducts } from '../../favorite-products/entities/favorite-products.entity';
+import { ProductRatings } from '../../rating/entities/product-rating.entity';
 
 @Entity()
 export class Users {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ primary: true, length: 30 })
-  @IsAlphanumeric()
+  @Column({ length: 30 })
   username: string;
 
   @Column({
@@ -27,29 +18,29 @@ export class Users {
   passwordHash: string;
 
   @Column({ length: 80 })
-  @IsEmail()
   email: string;
 
   @Column({ name: 'first_name', length: 15 })
-  @IsAlpha()
   firstName: string;
 
   @Column({ name: 'last_name', length: 15 })
-  @IsAlpha()
   lastName: string;
 
   @Column({ length: 30, nullable: true })
-  @IsOptional()
-  @IsAlpha()
   city: string;
 
   @Column({ length: 30, nullable: true })
-  @IsOptional()
-  @IsAlphanumeric()
   street: string;
 
   @Column({ length: 10, nullable: true })
-  @IsOptional()
-  @IsNumberString()
   zipcode: string;
+
+  @OneToMany(() => FavoriteProducts, (favProducts) => favProducts.user)
+  favProducts: FavoriteProducts[];
+
+  @OneToMany(() => ProductRatings, (productRatings) => productRatings.user)
+  productRatings: ProductRatings[];
+
+  @OneToMany(() => Orders, (orders) => orders.user)
+  orders: Orders[];
 }
