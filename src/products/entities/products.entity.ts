@@ -10,6 +10,7 @@ import {
 import { FavoriteProducts } from '../../favorite-products/entities/favorite-products.entity';
 import { OrderDetails } from '../../orders/entities/orderDetails.entity';
 import { ProductRatings } from '../../rating/entities/product-rating.entity';
+import { Carts } from '../../cart/entities/carts.entity';
 
 @Entity()
 export class Products {
@@ -39,12 +40,15 @@ export class Products {
   @JoinColumn({ name: 'category_id' })
   category: Categories;
 
-  @OneToMany(() => FavoriteProducts, (favProducts) => favProducts.user)
-  favoriteProducts: FavoriteProducts[];
+  @OneToMany(() => FavoriteProducts, (favProducts) => favProducts.product)
+  favProducts: FavoriteProducts[];
 
   @OneToMany(() => OrderDetails, (orderDetails) => orderDetails.product)
   orderDetails: OrderDetails[];
 
   @OneToMany(() => ProductRatings, (productRatings) => productRatings.product)
   productRatings: ProductRatings[];
+
+  // @ManyToOne(() => Carts, (cart) => cart.products)
+  // cart: Carts;
 }

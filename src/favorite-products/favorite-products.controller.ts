@@ -8,34 +8,44 @@ import {
   Post,
   Body,
   ParseBoolPipe,
-  ValidationPipe,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '../guards/auth.guard';
+import { FavoriteProductsService } from './favorite-products.service';
+import { Session } from '@nestjs/common/decorators';
 
 @Controller('favorite-products')
 @UseGuards(AuthGuard)
 export class FavoriteProductsController {
+  constructor(private readonly favProductsService: FavoriteProductsService) {}
   @Delete(':prodId')
-  deleteFavProduct(@Param('prodId', ParseIntPipe) prodId: number) {
+  deleteFavProduct(
+    @Param('prodId', ParseIntPipe) prodId: number,
+    @Session() session: Record<string, any>,
+  ) {
+    this.favProductsService.deleteProduct(session, prodId);
     //remove this product from this wishlist
   }
 
   @Get()
-  getFavProducts() {
-    //get wish list of a user
+  async getFavProducts(@Session() session: Record<string, any>) {
+    return await this.favProductsService.getProducts(session);
   }
 
   @Put(':prodId')
   updateFavProduct(
     @Param('prodId', ParseIntPipe) prodId: number,
-    @Body('notifyWhenInStock', ParseBoolPipe) notifyWhenInStock: boolean,
+    @Body('notifyWhenInStock', ParseIntPipe) notifyWhenInStock: number,
+    @Session() session: Record<string, any>,
   ) {
-    //update this specific user's wish list
+    this.favProductsService.updateProduct(session, notifyWhenInStock, prodId);
   }
 
   @Post()
-  addFavProduct(@Body('prodId', ParseIntPipe) prodId: number) {
-    //add an item to the wishlist
+  addFavProduct(
+    @Body('prodId', ParseIntPipe) prodId: number,
+    @Session() session: Record<string, any>,
+  ) {
+    this.favProductsService.addProduct(session, prodId);
   }
 }

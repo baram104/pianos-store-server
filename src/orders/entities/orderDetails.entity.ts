@@ -6,6 +6,7 @@ import { Orders } from './orders.entity';
 export class OrderDetails {
   @Column({ type: 'smallint' })
   quantity: number;
+
   @ManyToOne(() => Orders, (orders) => orders.orderDetails, {
     nullable: false,
     primary: true,

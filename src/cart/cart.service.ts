@@ -1,26 +1,45 @@
 import { Injectable, Session } from '@nestjs/common';
 import { AddProductDto } from './add-product-dto';
+import { CartsRepository } from './carts.repository';
 
 @Injectable()
 export class CartService {
-  getCartById(@Session() session: Record<string, any>) {
+  constructor(private cartsRep: CartsRepository) {}
+  async getCartById(session) {
     const userId = session.user.id;
-    //return cart from data base by user id
+    const cartProducts = await this.cartsRep.find({
+      where: {
+        user: userId,
+      },
+    });
+    return cartProducts;
   }
 
-  addProductToCart(
-    product: AddProductDto,
-    @Session() session: Record<string, any>,
-  ) {
+  async addProductToCart(product: AddProductDto, session) {
     const userId = session.user.id;
-    //add product to cart by user id with all the details
+    const data = {
+      productId: product.prodId,
+      quantity: product.quantity,
+      user: userId,
+    };
+    await this.cartsRep.save(data);
   }
 
-  updateProductQuantity(
-    quantity: number,
-    @Session() session: Record<string, any>,
-  ) {
+  async updateProductQuantity(prodId: number, quantity: number, session) {
     const userId = session.user.id;
-    //update this product with the new quantity
+    const data = { user: userId, productId: prodId, quantity: quantity };
+    const cart = await this.cartsRep.update(
+      {
+        productId: prodId,
+        user: userId,
+      },
+      {
+        quantity: quantity,
+      },
+    );
+  }
+
+  async deleteProduct(prodId: number, session) {
+    await this.cartsRep.delete({ productId: prodId, user: session.user.id });
   }
 }

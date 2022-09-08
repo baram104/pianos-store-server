@@ -12,18 +12,24 @@ import {
 } from '@nestjs/common';
 import { AddProductDto } from './add-product-dto';
 import { AuthGuard } from '../guards/auth.guard';
+import { CartService } from './cart.service';
+import { Session } from '@nestjs/common/decorators';
 
 @Controller('cart')
 @UseGuards(AuthGuard)
 export class CartController {
+  constructor(private readonly cartService: CartService) {}
   @Get()
-  getCartById() {
-    //get Cart by id
+  getCartById(@Session() session: Record<string, any>) {
+    return this.cartService.getCartById(session);
   }
 
   @Post()
-  addProduct(@Body(new ValidationPipe()) productData: AddProductDto) {
-    //create MW for validating the data
+  addProduct(
+    @Body(new ValidationPipe()) productData: AddProductDto,
+    @Session() session: Record<string, any>,
+  ) {
+    this.cartService.addProductToCart(productData, session);
     //add cart
   }
 
@@ -31,13 +37,16 @@ export class CartController {
   updateCart(
     @Body('quantity', ParseIntPipe) quantity: number,
     @Param('prodId', ParseIntPipe) prodId: number,
+    @Session() session: Record<string, any>,
   ) {
-    //create MW for validating the data
-    //update cart
+    this.cartService.updateProductQuantity(prodId, quantity, session);
   }
 
   @Delete(':prodId')
-  deleteCart(@Param('prodId', ParseIntPipe) prodId: number) {
-    //delete cart
+  deleteCart(
+    @Param('prodId', ParseIntPipe) prodId: number,
+    @Session() session: Record<string, any>,
+  ) {
+    this.cartService.deleteProduct(prodId, session);
   }
 }

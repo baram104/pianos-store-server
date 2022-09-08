@@ -1,14 +1,35 @@
 import { Injectable, Session } from '@nestjs/common';
-import { OrderDto } from './order-dto';
+import { OrdersRepository } from './orders.repository';
+import { Orders } from './entities/orders.entity';
+import { OrderDetails } from './entities/orderDetails.entity';
+import { OrderDetailsRepository } from './orderDetails.repository';
+import { ProductsService } from '../products/products.service';
 
 @Injectable()
 export class OrdersService {
-  getOrderById(@Session() session: Record<string, any>, orderId: number) {
+  constructor(
+    private ordersRepo: OrdersRepository,
+    private orderDetailsRepo: OrderDetailsRepository,
+    private productsService: ProductsService,
+  ) {}
+  async getOrderById(session, orderId: number) {
     const userId = session.user.id;
-    //check if user id has this orderId
+    const order = await this.ordersRepo.find({
+      where: { user: userId, id: orderId },
+    });
+    return order;
   }
 
-  placeOrder(@Session() session: Record<string, any>, order: OrderDto) {
+  async placeOrder(session, orderDetails: OrderDetails[]) {
     const userId = session.user.id;
+    const order = await this.ordersRepo.save({
+      user: userId,
+      date: new Date(),
+    });
+    await this.orderDetailsRepo.save({
+      order,
+      quantity: 2,
+      product: await this.productsService.getById(2),
+    });
   }
 }
