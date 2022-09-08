@@ -7,7 +7,7 @@ export class ProductRatings {
   @Column({
     type: 'tinyint',
   })
-  rate: number;
+  rating: number;
 
   @ManyToOne(() => Users, (users) => users.productRatings, {
     nullable: false,

@@ -4,7 +4,12 @@ import { Products } from '../../products/entities/products.entity';
 
 @Entity()
 export class FavoriteProducts {
-  @Column({ type: 'bit', default: false, name: 'notify_when_in_stock' })
+  @Column({
+    type: 'bit',
+    default: false,
+    name: 'notify_when_in_stock',
+    nullable: true,
+  })
   notifyWhenInStock: boolean;
 
   @ManyToOne(() => Users, (user) => user.favProducts, {
