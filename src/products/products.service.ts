@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { ProductsRepository } from './products.repository';
 
 @Injectable()
 export class ProductsService {
+  constructor(private productsRepo: ProductsRepository) {}
   getBySearchTerm(searchTerm: string) {}
 
   getBySort(
@@ -9,5 +11,7 @@ export class ProductsService {
   ) {}
 
   getByCategory(categoryId: number) {}
-  getById(id: number) {}
+  async getById(id: number) {
+    return await this.productsRepo.findOne(id);
+  }
 }

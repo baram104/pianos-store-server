@@ -2,8 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  Param,
-  ParseIntPipe,
   Post,
   Session,
   UseGuards,
@@ -12,31 +10,32 @@ import {
 import { AuthGuard } from '../guards/auth.guard';
 import { LoginDetailsDto } from './login-details-dto';
 import { RegisterationDetailsDto } from './registeration-details-dto';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
   @Get('profile')
   @UseGuards(AuthGuard)
-  getUser() {
-    //get user details
+  getUser(@Session() session: Record<string, any>) {
+    return this.usersService.getUser(session);
   }
 
   @Post('login')
-  login(
+  async login(
     @Body(new ValidationPipe()) userDetails: LoginDetailsDto,
     @Session() session: Record<string, any>,
   ) {
-    session.user = userDetails;
-    //validate user details against db
-    //create session
-    //redirect to home page
+    const res = await this.usersService.login(userDetails);
+    if (res) session.user = res;
   }
 
   @Post('register')
-  register(
+  async register(
     @Body(new ValidationPipe()) userRegDetails: RegisterationDetailsDto,
+    @Session() session: Record<string, any>,
   ) {
-    //validate the data
-    //add user to the system and redirect them to home page
+    return await this.usersService.register(userRegDetails, session);
   }
 }

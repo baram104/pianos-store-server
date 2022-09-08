@@ -5,12 +5,14 @@ import { Products } from '../../products/entities/products.entity';
 @Entity()
 export class FavoriteProducts {
   @Column({
-    type: 'bit',
-    default: false,
+    type: 'tinyint',
     name: 'notify_when_in_stock',
     nullable: true,
   })
-  notifyWhenInStock: boolean;
+  notifyWhenInStock: number;
+
+  @Column({ primary: true, type: 'int', name: 'product_id' })
+  productId: number;
 
   @ManyToOne(() => Users, (user) => user.favProducts, {
     nullable: false,
@@ -19,7 +21,7 @@ export class FavoriteProducts {
   @JoinColumn({ name: 'user_id' })
   user: Users;
 
-  @ManyToOne(() => Products, (products) => products.favoriteProducts, {
+  @ManyToOne(() => Products, (product) => product.favProducts, {
     nullable: false,
     primary: true,
   })
