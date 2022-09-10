@@ -10,25 +10,44 @@ export class ProductsService {
     return this.productsRepo.query(`CALL search_by('${searchTerm}')`);
   }
 
-  getBySort(
+  async getBySort(
     sortCondition: 'low-to-high' | 'high-to-low' | 'popular' | 'rated',
   ) {
+    let products;
     if (sortCondition === 'low-to-high') {
-      return this.productsRepo.query(`CALL low_to_high_price()`);
+      products = await this.productsRepo.query(`CALL low_to_high_price()`);
+    } else if (sortCondition === 'high-to-low') {
+      products = await this.productsRepo.query(`CALL high_to_low_price()`);
+    } else if (sortCondition === 'popular') {
+      products = await this.productsRepo.query(`CALL most_popular()`);
+    } else if (sortCondition === 'rated') {
+      products = await this.productsRepo.query(`CALL most_rated()`);
+    } else {
+      return await this.getAll();
     }
-    if (sortCondition === 'high-to-low') {
-      return this.productsRepo.query(`CALL high_to_low_price()`);
-    }
-    if (sortCondition === 'popular') {
-      return this.productsRepo.query(`CALL most_popular()`);
-    }
-    if (sortCondition === 'rated') {
-      return this.productsRepo.query(`CALL most_rated()`);
-    }
+
+    const mappedProducts = products[0].map((product) => {
+      const pianoImgs = fs.readdirSync(
+        path.dirname(__dirname).split('\\dist')[0] +
+          `\\public\\images\\pianos\\${product.id}`,
+      );
+      return { ...product, img: pianoImgs[0] };
+    });
+    return mappedProducts;
   }
 
   async getByCategory(categoryId: number) {
-    return await this.productsRepo.find({ where: { category: categoryId } });
+    const products = await this.productsRepo.find({
+      where: { category: categoryId },
+    });
+    const mappedProducts = products.map((product) => {
+      const pianoImgs = fs.readdirSync(
+        path.dirname(__dirname).split('\\dist')[0] +
+          `\\public\\images\\pianos\\${product.id}`,
+      );
+      return { ...product, img: pianoImgs[0] };
+    });
+    return mappedProducts;
   }
 
   async getById(id: number) {
