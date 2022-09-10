@@ -7,12 +7,10 @@ export class CartService {
   constructor(private cartsRep: CartsRepository) {}
   async getCartById(session) {
     const userId = session.user.id;
-    const cartProducts = await this.cartsRep.find({
-      where: {
-        user: userId,
-      },
-    });
-    return cartProducts;
+    return await this.cartsRep.query(
+      `select * from carts c join products p on c.product_id = p.id where c.user_id =?`,
+      [userId],
+    );
   }
 
   async addProductToCart(product: AddProductDto, session) {

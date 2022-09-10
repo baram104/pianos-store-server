@@ -1,29 +1,35 @@
 import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { timeStamp } from 'console';
+import { ProductsService } from './products.service';
 
 @Controller('products')
 export class ProductsController {
-  @Get()
-  getAll(@Query('search-term') searchTerm: string) {
-    //create a MW for transforming the data as needed
-    //get all products/or by a search term
+  constructor(private readonly productsService: ProductsService) {}
+  @Get('search')
+  getBySearch(@Query('term') searchTerm: string) {
+    return this.productsService.getBySearchTerm(searchTerm);
   }
 
-  @Get()
+  @Get('sort')
   getBySort(
-    @Query('sort')
+    @Query('condition')
     sortCondition: 'low-to-high' | 'high-to-low' | 'popular' | 'rated',
   ) {
-    //create a MW for getting the right data by the sort query
-    //get products by sort condition
+    return this.productsService.getBySort(sortCondition);
   }
 
   @Get('category/:categoryId')
   getProductsByCategory(@Param('categoryId', ParseIntPipe) categoryId: number) {
-    //get products by category id
+    return this.productsService.getByCategory(categoryId);
   }
 
   @Get(':id')
   getProduct(@Param('id', ParseIntPipe) id: number) {
-    //get product by id
+    return this.productsService.getById(id);
+  }
+
+  @Get()
+  getAll() {
+    return this.productsService.getAll();
   }
 }

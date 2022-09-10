@@ -26,10 +26,11 @@ export class OrdersService {
       user: userId,
       date: new Date(),
     });
-    await this.orderDetailsRepo.save({
-      order,
-      quantity: 2,
-      product: await this.productsService.getById(2),
-    });
+
+    await this.orderDetailsRepo.save([
+      { order, quantity: 2, product: await this.productsService.getById(2) },
+      { order, quantity: 2, product: await this.productsService.getById(4) },
+      { order, quantity: 2, product: await this.productsService.getById(7) },
+    ]);
   }
 }

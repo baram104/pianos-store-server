@@ -1,17 +1,54 @@
 import { Injectable } from '@nestjs/common';
 import { ProductsRepository } from './products.repository';
+const fs = require('fs');
+const path = require('path');
 
 @Injectable()
 export class ProductsService {
   constructor(private productsRepo: ProductsRepository) {}
-  getBySearchTerm(searchTerm: string) {}
+  getBySearchTerm(searchTerm: string) {
+    return this.productsRepo.query(`CALL search_by('${searchTerm}')`);
+  }
 
   getBySort(
     sortCondition: 'low-to-high' | 'high-to-low' | 'popular' | 'rated',
-  ) {}
+  ) {
+    if (sortCondition === 'low-to-high') {
+      return this.productsRepo.query(`CALL low_to_high_price()`);
+    }
+    if (sortCondition === 'high-to-low') {
+      return this.productsRepo.query(`CALL high_to_low_price()`);
+    }
+    if (sortCondition === 'popular') {
+      return this.productsRepo.query(`CALL most_popular()`);
+    }
+    if (sortCondition === 'rated') {
+      return this.productsRepo.query(`CALL most_rated()`);
+    }
+  }
 
-  getByCategory(categoryId: number) {}
+  async getByCategory(categoryId: number) {
+    return await this.productsRepo.find({ where: { category: categoryId } });
+  }
+
   async getById(id: number) {
-    return await this.productsRepo.findOne(id);
+    const product = await this.productsRepo.findOne(id);
+    const productImgs = fs.readdirSync(
+      path.dirname(__dirname).split('\\dist')[0] +
+        `\\public\\images\\pianos\\${id}`,
+    );
+    return { ...product, imgs: productImgs };
+  }
+
+  async getAll() {
+    const products = await this.productsRepo.find();
+    const mappedProducts = products.map((product) => {
+      const pianoImgs = fs.readdirSync(
+        path.dirname(__dirname).split('\\dist')[0] +
+          `\\public\\images\\pianos\\${product.id}`,
+      );
+      return { ...product, img: pianoImgs[0] };
+    });
+    return mappedProducts;
   }
 }
