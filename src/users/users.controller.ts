@@ -28,7 +28,11 @@ export class UsersController {
     @Session() session: Record<string, any>,
   ) {
     const res = await this.usersService.login(userDetails);
-    if (res) session.user = res;
+    if (res) {
+      session.user = res;
+      return { logged: true, username: res.username };
+    }
+    return { logged: false };
   }
 
   @Post('register')

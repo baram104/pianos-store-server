@@ -30,7 +30,6 @@ export class CartController {
     @Session() session: Record<string, any>,
   ) {
     this.cartService.addProductToCart(productData, session);
-    //add cart
   }
 
   @Put(':prodId')
