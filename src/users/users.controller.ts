@@ -30,7 +30,7 @@ export class UsersController {
     const res = await this.usersService.login(userDetails);
     if (res) {
       session.user = res;
-      return { logged: true, username: res.username };
+      return { logged: true, username: res.username, firstName: res.firstName };
     }
     return { logged: false };
   }
