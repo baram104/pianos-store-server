@@ -12,6 +12,8 @@ async function bootstrap() {
       saveUninitialized: false,
     }),
   );
-  await app.listen(4000);
+
+  app.setGlobalPrefix('api');
+  await app.listen(3100);
 }
 bootstrap();

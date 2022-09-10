@@ -24,7 +24,6 @@ export class FavoriteProductsController {
     @Session() session: Record<string, any>,
   ) {
     this.favProductsService.deleteProduct(session, prodId);
-    //remove this product from this wishlist
   }
 
   @Get()

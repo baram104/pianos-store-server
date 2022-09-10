@@ -17,7 +17,11 @@ export class FavoriteProductsService {
 
   async getProducts(session) {
     const userId = session.user.id;
-    return await this.favProductsRepo.find({ where: { user: userId } });
+    // return await this.favProductsRepo.find({ where: { user: userId } });
+    return await this.favProductsRepo.query(
+      'select * from favorite_products f join products p on f.product_id = p.id where f.user_id = ?',
+      [userId],
+    );
   }
 
   async updateProduct(session, notifyWhenInStock: number, prodId: number) {
