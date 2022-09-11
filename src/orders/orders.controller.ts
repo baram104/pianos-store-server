@@ -27,10 +27,11 @@ export class OrdersController {
   }
 
   @Post()
-  placeOrder(
+  async placeOrder(
     @Body(new ValidationPipe()) orderDetails: OrderDetails[],
     @Session() session: Record<string, any>,
   ) {
-    this.ordersService.placeOrder(session, orderDetails);
+    const orderId = await this.ordersService.placeOrder(session, orderDetails);
+    return { orderId };
   }
 }

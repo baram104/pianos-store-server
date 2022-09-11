@@ -14,9 +14,12 @@ export class OrdersService {
   ) {}
   async getOrderById(session, orderId: number) {
     const userId = session.user.id;
-    const order = await this.ordersRepo.find({
-      where: { user: userId, id: orderId },
-    });
+    // const order = await this.ordersRepo.find({
+    //   where: { user: userId, id: orderId },
+    // });
+    const order = await this.ordersRepo.query(
+      `select o.id,od.quantity,o.date,p.name,p.unit_price from orders o join order_details od on o.id = od.order_id join products p on od.product_id = p.id where o.id = ${orderId} and o.user_id = ${userId}`,
+    );
     return order;
   }
 
@@ -32,6 +35,11 @@ export class OrdersService {
     //   { order, quantity: 2, product: await this.productsService.getById(4) },
     //   { order, quantity: 2, product: await this.productsService.getById(7) },
     // ]);
-    await this.orderDetailsRepo.save(orderDetails);
+    for (const product of orderDetails) {
+      await this.orderDetailsRepo.query(
+        `insert into order_details values(${order.id},${product.product},${product.quantity})`,
+      );
+    }
+    return order.id;
   }
 }

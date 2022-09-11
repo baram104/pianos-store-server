@@ -8,7 +8,8 @@ const bcrypt = require('bcrypt');
 export class UsersService {
   constructor(private usersRepo: UsersRepository) {}
   getUser(session) {
-    return session.user;
+    const { firstName, lastName, city, street, zipcode } = session.user;
+    return { firstName, lastName, city, street, zipcode };
   }
 
   async login(loginDetails: LoginDetailsDto) {
