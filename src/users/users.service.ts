@@ -39,5 +39,19 @@ export class UsersService {
     };
     await this.usersRepo.save(newUser);
     session.user = await this.usersRepo.findOne({ username });
+    return session.user;
+  }
+
+  async updateAddress({ city, street, zipcode }, session) {
+    await this.usersRepo.update(
+      {
+        id: session.user.id,
+      },
+      {
+        city,
+        street,
+        zipcode,
+      },
+    );
   }
 }
