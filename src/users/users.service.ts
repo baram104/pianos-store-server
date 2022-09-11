@@ -22,6 +22,10 @@ export class UsersService {
     }
   }
 
+  async logout(res) {
+    res.clearCookie('connect.sid');
+  }
+
   async register(regDetails: RegisterationDetailsDto, session) {
     const { username, password, firstName, lastName, email } = regDetails;
     const existingEmail = await this.usersRepo.findOne({ email });
