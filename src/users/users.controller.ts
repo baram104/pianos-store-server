@@ -7,7 +7,9 @@ import {
   Session,
   UseGuards,
   ValidationPipe,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthGuard } from '../guards/auth.guard';
 import { LoginDetailsDto } from './login-details-dto';
 import { RegisterationDetailsDto } from './registeration-details-dto';
@@ -22,6 +24,13 @@ export class UsersController {
   @UseGuards(AuthGuard)
   getUser(@Session() session: Record<string, any>) {
     return this.usersService.getUser(session);
+  }
+
+  @Get('logout')
+  @UseGuards(AuthGuard)
+  logout(@Res() res: Response) {
+    this.usersService.logout(res);
+    res.sendStatus(200);
   }
 
   @Post('login')
