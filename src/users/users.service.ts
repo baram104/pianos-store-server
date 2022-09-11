@@ -8,7 +8,8 @@ const bcrypt = require('bcrypt');
 export class UsersService {
   constructor(private usersRepo: UsersRepository) {}
   getUser(session) {
-    return session.user;
+    const { firstName, lastName, city, street, zipcode } = session.user;
+    return { firstName, lastName, city, street, zipcode };
   }
 
   async login(loginDetails: LoginDetailsDto) {
@@ -39,5 +40,19 @@ export class UsersService {
     };
     await this.usersRepo.save(newUser);
     session.user = await this.usersRepo.findOne({ username });
+    return session.user;
+  }
+
+  async updateAddress({ city, street, zipcode }, session) {
+    await this.usersRepo.update(
+      {
+        id: session.user.id,
+      },
+      {
+        city,
+        street,
+        zipcode,
+      },
+    );
   }
 }

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Patch,
   Post,
   Session,
   UseGuards,
@@ -10,6 +11,7 @@ import {
 import { AuthGuard } from '../guards/auth.guard';
 import { LoginDetailsDto } from './login-details-dto';
 import { RegisterationDetailsDto } from './registeration-details-dto';
+import { AddressDetailsDto } from './update-address.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -40,6 +42,15 @@ export class UsersController {
     @Body(new ValidationPipe()) userRegDetails: RegisterationDetailsDto,
     @Session() session: Record<string, any>,
   ) {
-    return await this.usersService.register(userRegDetails, session);
+    const user = await this.usersService.register(userRegDetails, session);
+    return { username: user.username, firstName: user.firstName };
+  }
+
+  @Patch()
+  async updateAddress(
+    @Body(new ValidationPipe()) addressDetails: AddressDetailsDto,
+    @Session() session: Record<string, any>,
+  ) {
+    await this.usersService.updateAddress(addressDetails, session);
   }
 }
