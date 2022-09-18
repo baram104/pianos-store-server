@@ -30,14 +30,12 @@ export class OrdersService {
       date: new Date(),
     });
 
-    // await this.orderDetailsRepo.save([
-    //   { order, quantity: 2, product: await this.productsService.getById(2) },
-    //   { order, quantity: 2, product: await this.productsService.getById(4) },
-    //   { order, quantity: 2, product: await this.productsService.getById(7) },
-    // ]);
     for (const product of orderDetails) {
       await this.orderDetailsRepo.query(
         `insert into order_details values(${order.id},${product.product},${product.quantity})`,
+      );
+      await this.orderDetailsRepo.query(
+        `UPDATE products SET units_in_stock = units_in_stock - ${product.quantity} WHERE id = ${product.product}`,
       );
     }
     return order.id;
