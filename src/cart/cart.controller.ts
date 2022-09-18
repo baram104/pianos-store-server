@@ -42,10 +42,15 @@ export class CartController {
   }
 
   @Delete(':prodId')
-  deleteCart(
+  deleteProd(
     @Param('prodId', ParseIntPipe) prodId: number,
     @Session() session: Record<string, any>,
   ) {
     this.cartService.deleteProduct(prodId, session);
+  }
+
+  @Delete()
+  deleteCart(@Session() session: Record<string, any>) {
+    this.cartService.deleteCart(session);
   }
 }

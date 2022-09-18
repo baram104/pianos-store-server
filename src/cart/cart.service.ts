@@ -41,4 +41,10 @@ export class CartService {
   async deleteProduct(prodId: number, session) {
     await this.cartsRep.delete({ productId: prodId, user: session.user.id });
   }
+
+  async deleteCart(session) {
+    await this.cartsRep.query(
+      `DELETE FROM carts WHERE user_id= ${session.user.id};`,
+    );
+  }
 }
