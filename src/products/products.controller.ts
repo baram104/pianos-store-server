@@ -5,10 +5,6 @@ import { ProductsService } from './products.service';
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
-  @Get('search')
-  getBySearch(@Query('term') searchTerm: string) {
-    return this.productsService.getBySearchTerm(searchTerm);
-  }
 
   @Get('sort')
   getBySort(
