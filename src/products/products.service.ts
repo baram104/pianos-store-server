@@ -6,9 +6,6 @@ const path = require('path');
 @Injectable()
 export class ProductsService {
   constructor(private productsRepo: ProductsRepository) {}
-  getBySearchTerm(searchTerm: string) {
-    return this.productsRepo.query(`CALL search_by('${searchTerm}')`);
-  }
 
   async getBySort(
     sortCondition: 'low-to-high' | 'high-to-low' | 'popular' | 'rated',
@@ -60,7 +57,7 @@ export class ProductsService {
   }
 
   async getAll() {
-    const products = await this.productsRepo.find();
+    const products = await this.productsRepo.query(`select * from products`);
     const mappedProducts = products.map((product) => {
       const pianoImgs = fs.readdirSync(
         path.dirname(__dirname).split('\\dist')[0] +
