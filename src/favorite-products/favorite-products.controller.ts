@@ -32,12 +32,16 @@ export class FavoriteProductsController {
   }
 
   @Put(':prodId')
-  updateFavProduct(
+  async updateFavProduct(
     @Param('prodId', ParseIntPipe) prodId: number,
     @Body('notifyWhenInStock', ParseIntPipe) notifyWhenInStock: number,
     @Session() session: Record<string, any>,
   ) {
-    this.favProductsService.updateProduct(session, notifyWhenInStock, prodId);
+    await this.favProductsService.updateProduct(
+      session,
+      notifyWhenInStock,
+      prodId,
+    );
   }
 
   @Post()

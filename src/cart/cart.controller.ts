@@ -20,8 +20,8 @@ import { Session } from '@nestjs/common/decorators';
 export class CartController {
   constructor(private readonly cartService: CartService) {}
   @Get()
-  getCartById(@Session() session: Record<string, any>) {
-    return this.cartService.getCartById(session);
+  async getCartById(@Session() session: Record<string, any>) {
+    return await this.cartService.getCartById(session);
   }
 
   @Post()
@@ -29,16 +29,16 @@ export class CartController {
     @Body(new ValidationPipe()) productData: AddProductDto,
     @Session() session: Record<string, any>,
   ) {
-    return await this.cartService.addProductToCart(productData, session);
+    await this.cartService.addProductToCart(productData, session);
   }
 
   @Put(':prodId')
-  updateCart(
+  async updateCart(
     @Body('quantity', ParseIntPipe) quantity: number,
     @Param('prodId', ParseIntPipe) prodId: number,
     @Session() session: Record<string, any>,
   ) {
-    this.cartService.updateProductQuantity(prodId, quantity, session);
+    await this.cartService.updateProductQuantity(prodId, quantity, session);
   }
 
   @Delete(':prodId')
@@ -46,11 +46,11 @@ export class CartController {
     @Param('prodId', ParseIntPipe) prodId: number,
     @Session() session: Record<string, any>,
   ) {
-    return await this.cartService.deleteProduct(prodId, session);
+    await this.cartService.deleteProduct(prodId, session);
   }
 
   @Delete()
-  deleteCart(@Session() session: Record<string, any>) {
-    this.cartService.deleteCart(session);
+  async deleteCart(@Session() session: Record<string, any>) {
+    await this.cartService.deleteCart(session);
   }
 }

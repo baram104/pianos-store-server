@@ -34,9 +34,9 @@ export class ProductsService {
   }
 
   async getByCategory(categoryId: number) {
-    const products = await this.productsRepo.find({
-      where: { category: categoryId },
-    });
+    const products = await this.productsRepo.query(
+      `select * from products where category_id = ${categoryId}`,
+    );
     const mappedProducts = products.map((product) => {
       const pianoImgs = fs.readdirSync(
         path.dirname(__dirname).split('\\dist')[0] +
@@ -48,12 +48,15 @@ export class ProductsService {
   }
 
   async getById(id: number) {
-    const product = await this.productsRepo.findOne(id);
+    const product = await this.productsRepo.query(
+      `select * from products where id = ?`,
+      [id],
+    );
     const productImgs = fs.readdirSync(
       path.dirname(__dirname).split('\\dist')[0] +
         `\\public\\images\\pianos\\${id}`,
     );
-    return { ...product, imgs: productImgs };
+    return { ...product[0], imgs: productImgs };
   }
 
   async getAll() {
