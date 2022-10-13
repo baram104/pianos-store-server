@@ -19,11 +19,11 @@ import { Session } from '@nestjs/common/decorators';
 export class FavoriteProductsController {
   constructor(private readonly favProductsService: FavoriteProductsService) {}
   @Delete(':prodId')
-  deleteFavProduct(
+  async deleteFavProduct(
     @Param('prodId', ParseIntPipe) prodId: number,
     @Session() session: Record<string, any>,
   ) {
-    this.favProductsService.deleteProduct(session, prodId);
+    await this.favProductsService.deleteProduct(session, prodId);
   }
 
   @Get()
@@ -32,19 +32,23 @@ export class FavoriteProductsController {
   }
 
   @Put(':prodId')
-  updateFavProduct(
+  async updateFavProduct(
     @Param('prodId', ParseIntPipe) prodId: number,
     @Body('notifyWhenInStock', ParseIntPipe) notifyWhenInStock: number,
     @Session() session: Record<string, any>,
   ) {
-    this.favProductsService.updateProduct(session, notifyWhenInStock, prodId);
+    await this.favProductsService.updateProduct(
+      session,
+      notifyWhenInStock,
+      prodId,
+    );
   }
 
   @Post()
-  addFavProduct(
+  async addFavProduct(
     @Body('prodId', ParseIntPipe) prodId: number,
     @Session() session: Record<string, any>,
   ) {
-    this.favProductsService.addProduct(session, prodId);
+    await this.favProductsService.addProduct(session, prodId);
   }
 }
