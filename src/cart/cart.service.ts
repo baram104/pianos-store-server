@@ -22,6 +22,7 @@ export class CartService {
     };
 
     await this.cartsRep.save(data);
+    return { added: 'added' };
   }
 
   async updateProductQuantity(prodId: number, quantity: number, session) {
@@ -40,6 +41,7 @@ export class CartService {
 
   async deleteProduct(prodId: number, session) {
     await this.cartsRep.delete({ productId: prodId, user: session.user.id });
+    return { added: 'added' };
   }
 
   async deleteCart(session) {

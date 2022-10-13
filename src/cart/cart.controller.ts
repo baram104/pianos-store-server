@@ -25,11 +25,11 @@ export class CartController {
   }
 
   @Post()
-  addProduct(
+  async addProduct(
     @Body(new ValidationPipe()) productData: AddProductDto,
     @Session() session: Record<string, any>,
   ) {
-    this.cartService.addProductToCart(productData, session);
+    return await this.cartService.addProductToCart(productData, session);
   }
 
   @Put(':prodId')
@@ -42,11 +42,11 @@ export class CartController {
   }
 
   @Delete(':prodId')
-  deleteProd(
+  async deleteProd(
     @Param('prodId', ParseIntPipe) prodId: number,
     @Session() session: Record<string, any>,
   ) {
-    this.cartService.deleteProduct(prodId, session);
+    return await this.cartService.deleteProduct(prodId, session);
   }
 
   @Delete()
