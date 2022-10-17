@@ -30,8 +30,7 @@ export class UsersService {
     const { username, password, firstName, lastName, email } = regDetails;
     const existingEmail = await this.usersRepo.findOne({ email });
     const existingUsername = await this.usersRepo.findOne({ username });
-    if (existingEmail) return 'email exists';
-    if (existingUsername) return 'username exists';
+    if (existingEmail || existingUsername) return;
 
     const saltRounds = 10;
     regDetails.password = await bcrypt.hash(password, saltRounds);
