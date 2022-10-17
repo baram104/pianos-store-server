@@ -8,6 +8,7 @@ import {
   UseGuards,
   ValidationPipe,
   Res,
+  BadRequestException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthGuard } from '../guards/auth.guard';
@@ -52,6 +53,8 @@ export class UsersController {
     @Session() session: Record<string, any>,
   ) {
     const user = await this.usersService.register(userRegDetails, session);
+    if (!user)
+      throw new BadRequestException('Username or Email already exists');
     return { username: user.username, firstName: user.firstName };
   }
 
